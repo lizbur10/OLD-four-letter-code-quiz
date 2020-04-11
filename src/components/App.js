@@ -7,7 +7,7 @@ class App extends React.Component {
         mode: "codeToName",
         bird: {},
         userResponse: "",
-        score: 0
+        questionList: []
         // gameOptions: [
         //     {
         //         questionName: "scope",
@@ -38,9 +38,14 @@ class App extends React.Component {
     giveAnswer = (bird) => {
         const answer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
         alert("The correct answer is " + answer);
-        this.onGoClick();
+        this.setState({questionList: [...this.state.questionList, {bird: bird, correct: false}]}, () => this.checkContinue());
+
     }
 
+    checkContinue = () => {
+        console.log(this.state.questionList);
+        this.state.questionList.length < 2 ? this.onGoClick() : this.endGame();
+    }
 
     renderQuestion = () => {
         const bird=this.state.bird;
@@ -61,14 +66,11 @@ class App extends React.Component {
 
     onSubmit = (bird, event) => {
         event.preventDefault();
-        const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Looking fly!", "Off the meter!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
+        const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
         var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
-        // const correctAnswer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
-        // if (this.state.userResponse.toLowerCase() === correctAnswer.toLowerCase()) {
         if (this.checkCorrect(bird)) {
             alert(wootWoot);
-            this.setState({userResponse: ""});
-            this.onGoClick();
+            this.setState({userResponse: "", questionList: [...this.state.questionList, {bird: bird, correct: true}] }, () => this.checkContinue());
         } else {
             alert("No soap - try again")
             this.setState({userResponse: ""});
@@ -84,6 +86,14 @@ class App extends React.Component {
             userResponse.toLowerCase().replace("'", "").replace("-", " ") === correctAnswer.toLowerCase().replace("'", "").replace("-", " ") 
     }
 
+    endGame = () => {
+        alert("Game over!");
+    }
+
+    addResponses = () => {
+        return "Responses here";
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -93,6 +103,7 @@ class App extends React.Component {
                     <button onClick={this.onGoClick}>GO</button>
                     {this.state.bird.common_name ? this.renderQuestion() : null }
                 </div>
+                { this.state.questionList.length > 0 ? this.addResponses() : null }
             </React.Fragment>
         );
             // <div className="ui container" style={{marginTop: '10px'}}>
