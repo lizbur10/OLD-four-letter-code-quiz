@@ -63,8 +63,9 @@ class App extends React.Component {
         event.preventDefault();
         const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Looking fly!", "Off the meter!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
         var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
-        const correctAnswer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
-        if (this.state.userResponse.toLowerCase() === correctAnswer.toLowerCase()) {
+        // const correctAnswer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
+        // if (this.state.userResponse.toLowerCase() === correctAnswer.toLowerCase()) {
+        if (this.checkCorrect(bird)) {
             alert(wootWoot);
             this.setState({userResponse: ""});
             this.onGoClick();
@@ -72,6 +73,15 @@ class App extends React.Component {
             alert("No soap - try again")
             this.setState({userResponse: ""});
         }
+    }
+
+    checkCorrect = (bird) => {
+        const {userResponse, mode} = this.state;
+        const correctAnswer = mode === "nameToCode" ? bird.four_letter_code : bird.common_name
+        return userResponse.toLowerCase() === correctAnswer.toLowerCase() ||
+            userResponse.toLowerCase().replace("'", "") === correctAnswer.toLowerCase().replace("'", "") ||
+            userResponse.toLowerCase().replace("-", " ") === correctAnswer.toLowerCase().replace("-", " ") ||
+            userResponse.toLowerCase().replace("'", "").replace("-", " ") === correctAnswer.toLowerCase().replace("'", "").replace("-", " ") 
     }
 
     render() {
