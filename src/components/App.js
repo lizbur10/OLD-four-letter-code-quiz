@@ -4,7 +4,7 @@ import React from 'react';
 class App extends React.Component {
 
     state = {
-        mode: "codeToName",
+        mode: "nameToCode",
         bird: {},
         userResponse: "",
         questionList: []
@@ -87,11 +87,34 @@ class App extends React.Component {
     }
 
     endGame = () => {
-        alert("Game over!");
+        const total = this.state.questionList.reduce((memo, currentVal) => {
+            
+            return currentVal.correct ? memo + 1 : memo
+        },0)
+        this.setState({bird: "", questionList: []});
+
+        alert(`You got ${(total/this.state.questionList.length)*100}% correct`);
     }
 
     addResponses = () => {
-        return "Responses here";
+        return this.state.questionList.map(question => {
+            let prompt, answer;
+            if (this.state.mode === "codeToName") {
+                prompt = question.bird.four_letter_code;
+                answer = question.bird.common_name;            
+            } else {
+                prompt = question.bird.common_name;
+                answer = question.bird.four_letter_code;
+            }
+            return (
+                <div key={question.bird.id} className="ui horizontal segments">
+                    <div className="ui segment">{prompt}</div>
+                    <div className="ui segment">{answer}</div>
+                    <div className="ui segment">{question.correct ? "Correct" : "Incorrect"}</div>
+                </div>
+            )
+        })
+
     }
 
     render() {
@@ -103,7 +126,9 @@ class App extends React.Component {
                     <button onClick={this.onGoClick}>GO</button>
                     {this.state.bird.common_name ? this.renderQuestion() : null }
                 </div>
-                { this.state.questionList.length > 0 ? this.addResponses() : null }
+                <div className="ui container">
+                    { this.state.questionList.length > 0 ? this.addResponses() : null }
+                </div>
             </React.Fragment>
         );
             // <div className="ui container" style={{marginTop: '10px'}}>
