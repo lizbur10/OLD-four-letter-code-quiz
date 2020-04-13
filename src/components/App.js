@@ -5,30 +5,23 @@ class App extends React.Component {
 
     state = {
         mode: "nameToCode",
+        url: "http://localhost:3000/birds/appledore/random",
         bird: {},
         userResponse: "",
         questionList: [],
         numQuestions: 10
-        // gameOptions: [
-        //     {
-        //         questionName: "scope",
-        //         question: "What birds should be included?",
-        //         choices: ["Appledore birds", "All birds on the ABA checklist"]
-        //     },
-        //     {
-        //         questionName: "mode",
-        //         question: "What game mode would you like?",
-        //         choices: ["Common name => Four-letter code", "Four-letter code => Common name"]
-        //     }
-        // ]
     }
 
     onGoClick = () => {
-        fetch("http://localhost:3000/birds/appledore/random")
+        fetch(this.state.url)
         .then(resp => resp.json())
         .then(bird => {
-            this.setState({bird: bird});
-            document.querySelector("#answer").focus();
+            if (this.state.questionList.find(question => question.id === bird.id)) {
+                this.onGoClick();
+            } else {
+                this.setState({bird: bird});
+                document.querySelector("#answer").focus();    
+            }
         })
     }
 
@@ -39,7 +32,8 @@ class App extends React.Component {
     giveAnswer = (bird) => {
         const answer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
         alert("The correct answer is " + answer);
-        this.setState({questionList: [...this.state.questionList, {bird: bird, correct: false}]}, () => this.checkContinue());
+        bird.correct = false;
+        this.setState({questionList: [...this.state.questionList, bird]}, () => this.checkContinue());
 
     }
 
@@ -70,7 +64,8 @@ class App extends React.Component {
         var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
         if (this.checkCorrect(bird)) {
             alert(wootWoot);
-            this.setState({userResponse: "", questionList: [...this.state.questionList, {bird: bird, correct: true}] }, () => this.checkContinue());
+            bird.correct = true
+            this.setState({userResponse: "", questionList: [...this.state.questionList, bird] }, () => this.checkContinue());
         } else {
             alert("No soap - try again")
             this.setState({userResponse: ""});
@@ -97,20 +92,20 @@ class App extends React.Component {
     }
 
     addResponses = () => {
-        return this.state.questionList.map(question => {
+        return this.state.questionList.map(bird => {
             let prompt, answer;
             if (this.state.mode === "codeToName") {
-                prompt = question.bird.four_letter_code;
-                answer = question.bird.common_name;            
+                prompt = bird.four_letter_code;
+                answer = bird.common_name;            
             } else {
-                prompt = question.bird.common_name;
-                answer = question.bird.four_letter_code;
+                prompt = bird.common_name;
+                answer = bird.four_letter_code;
             }
             return (
-                <div key={question.bird.id} className="ui horizontal segments">
+                <div key={bird.id} className="ui horizontal segments">
                     <div className="ui segment">{prompt}</div>
                     <div className="ui segment">{answer}</div>
-                    <div className="ui segment">{question.correct ? "Correct" : "Incorrect"}</div>
+                    <div className="ui segment">{bird.correct ? "Correct" : "Incorrect"}</div>
                 </div>
             )
         })
@@ -119,18 +114,13 @@ class App extends React.Component {
 
     render() {
         return (
-            <WelcomeScreen onClick={this.onGoClick}/>
-            // <React.Fragment>
-            //     <div className="ui container">
-            //         <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
-            //         <h2>Ready to Play?</h2>
-            //         <button onClick={this.onGoClick}>GO</button>
-            //         {this.state.bird.common_name ? this.renderQuestion() : null }
-            //     </div>
-            //     <div className="ui container">
-            //         { this.state.questionList.length > 0 ? this.addResponses() : null }
-            //     </div>
-            // </React.Fragment>
+            <div className="ui container">
+                <WelcomeScreen onGoClick={this.onGoClick}/>
+                    {this.state.bird.common_name ? this.renderQuestion() : null }
+                <div className="ui container">
+                    { this.state.questionList.length > 0 ? this.addResponses() : null }
+                </div>
+            </div>
         );
     }
 };

@@ -5,9 +5,6 @@ const WelcomeScreen = (props) => {
         <div>
             <div className="ui container">
                 <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
-                {/* <h2>Ready to Play?</h2>
-                <button onClick={props.onGoClick}>GO</button> */}
-                {/* {this.state.bird.common_name ? this.renderQuestion() : null } */}
                 <div className="ui segment">
                     <div className="ui card">
                         <div className="content">
