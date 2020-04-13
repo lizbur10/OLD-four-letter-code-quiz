@@ -1,5 +1,5 @@
 import React from 'react';
-// import GameOptions from './GameOptions';
+import WelcomeScreen from './WelcomeScreen';
 
 class App extends React.Component {
 
@@ -7,7 +7,8 @@ class App extends React.Component {
         mode: "nameToCode",
         bird: {},
         userResponse: "",
-        questionList: []
+        questionList: [],
+        numQuestions: 10
         // gameOptions: [
         //     {
         //         questionName: "scope",
@@ -43,8 +44,7 @@ class App extends React.Component {
     }
 
     checkContinue = () => {
-        console.log(this.state.questionList);
-        this.state.questionList.length < 2 ? this.onGoClick() : this.endGame();
+        this.state.questionList.length < this.state.numQuestions ? this.onGoClick() : this.endGame();
     }
 
     renderQuestion = () => {
@@ -119,29 +119,19 @@ class App extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <div className="ui container">
-                    <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
-                    <h2>Ready to Play?</h2>
-                    <button onClick={this.onGoClick}>GO</button>
-                    {this.state.bird.common_name ? this.renderQuestion() : null }
-                </div>
-                <div className="ui container">
-                    { this.state.questionList.length > 0 ? this.addResponses() : null }
-                </div>
-            </React.Fragment>
+            <WelcomeScreen onClick={this.onGoClick}/>
+            // <React.Fragment>
+            //     <div className="ui container">
+            //         <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
+            //         <h2>Ready to Play?</h2>
+            //         <button onClick={this.onGoClick}>GO</button>
+            //         {this.state.bird.common_name ? this.renderQuestion() : null }
+            //     </div>
+            //     <div className="ui container">
+            //         { this.state.questionList.length > 0 ? this.addResponses() : null }
+            //     </div>
+            // </React.Fragment>
         );
-            // <div className="ui container" style={{marginTop: '10px'}}>
-            //     {this.state.gameOptions.map(option => {
-            //         return <GameOptions 
-            //             questionName={option.questionName} 
-            //             question={option.question} 
-            //             choices={option.choices}
-            //         />
-            //     })}
-                
-            // </div>
-        // );    
     }
 };
 
