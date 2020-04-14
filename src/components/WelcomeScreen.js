@@ -50,13 +50,25 @@ const WelcomeScreen = (props) => {
                                 <div className="grouped fields">
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="mode" id="name2code" />
+                                            <input 
+                                                type="radio" 
+                                                name="mode" 
+                                                id="nameToCode" 
+                                                onChange={props.onModeChange}
+                                                defaultChecked={props.mode==="nameToCode"} 
+                                            />
                                             <label>Common name => Four-letter code</label>
                                         </div>
                                     </div>
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="mode" id="code2name" />
+                                            <input 
+                                                type="radio" 
+                                                name="mode" 
+                                                id="codeToName" 
+                                                onChange={props.onModeChange}
+                                                defaultChecked={props.mode==="codeToName"} 
+                                            />
                                             <label>Four-letter code => Common name</label>
                                         </div>
                                     </div>        

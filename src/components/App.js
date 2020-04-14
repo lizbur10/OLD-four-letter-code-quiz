@@ -5,7 +5,7 @@ class App extends React.Component {
 
     state = {
         scope: "",
-        mode: "nameToCode",
+        mode: "",
         bird: {},
         userResponse: "",
         questionList: [],
@@ -114,12 +114,9 @@ class App extends React.Component {
 
     }
 
-    onScopeChange = (event) => {
-        console.log(event.target.id);
-        this.setState({
-            scope: event.target.id
-        })
-    }
+    onScopeChange = (event) => this.setState({ scope: event.target.id })
+
+    onModeChange = (event) => this.setState({ mode: event.target.id })
 
     render() {
         return (
@@ -129,6 +126,7 @@ class App extends React.Component {
                     mode={this.state.mode}
                     onGoClick={this.onGoClick} 
                     onScopeChange={this.onScopeChange}
+                    onModeChange={this.onModeChange}
                 />
                     {this.state.bird.common_name ? this.renderQuestion() : null }
                 <div className="ui container">
