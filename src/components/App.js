@@ -1,11 +1,12 @@
 import React from 'react';
 import WelcomeScreen from './WelcomeScreen';
+import { Icon, Table } from 'semantic-ui-react'
 
 class App extends React.Component {
 
     state = {
-        scope: "",
-        mode: "",
+        scope: "appledore",
+        mode: "nameToCode",
         bird: {},
         userResponse: "",
         questionList: [],
@@ -96,6 +97,7 @@ class App extends React.Component {
     addResponses = () => {
         return this.state.questionList.map(bird => {
             let prompt, answer;
+            const icon = bird.correct ? {name: "checkmark", color: 'green'} : {name: "x", color: 'red'}
             if (this.state.mode === "codeToName") {
                 prompt = bird.four_letter_code;
                 answer = bird.common_name;            
@@ -104,11 +106,15 @@ class App extends React.Component {
                 answer = bird.four_letter_code;
             }
             return (
-                <div key={bird.id} className="ui horizontal segments">
-                    <div className="ui segment">{prompt}</div>
-                    <div className="ui segment">{answer}</div>
-                    <div className="ui segment">{bird.correct ? "Correct" : "Incorrect"}</div>
-                </div>
+                <Table.Row key={bird.id}>
+                <Table.Cell collapsing>
+                  {prompt}
+                </Table.Cell>
+                <Table.Cell collapsing>{answer}</Table.Cell>
+                <Table.Cell collapsing>
+                    <Icon name={icon.name} size='large' color={icon.color} />
+                </Table.Cell>
+              </Table.Row>
             )
         })
 
@@ -129,9 +135,16 @@ class App extends React.Component {
                     onModeChange={this.onModeChange}
                 />
                     {this.state.bird.common_name ? this.renderQuestion() : null }
-                <div className="ui container">
-                    { this.state.questionList.length > 0 ? this.addResponses() : null }
-                </div>
+                <Table celled striped>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='3'>Your responses</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        { this.state.questionList.length > 0 ? this.addResponses() : null }
+                    </Table.Body>
+                </Table>
             </div>
         );
     }
