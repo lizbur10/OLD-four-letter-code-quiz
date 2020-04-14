@@ -15,13 +15,25 @@ const WelcomeScreen = (props) => {
                                 <div className="grouped fields">
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="scope" />
+                                            <input 
+                                                type="radio" 
+                                                name="scope" 
+                                                id="appledore"
+                                                onChange={props.onScopeChange}
+                                                defaultChecked={props.scope==="appledore"} 
+                                            />
                                             <label>Appledore birds</label>
                                         </div>
                                     </div>
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="scope" />
+                                            <input 
+                                                type="radio" 
+                                                name="scope" 
+                                                id="aba"
+                                                onChange={props.onScopeChange}
+                                                defaultChecked={props.scope==="aba"} 
+                                            />
                                             <label>All birds on the ABA checklist</label>
                                         </div>
                                     </div>        
@@ -38,13 +50,13 @@ const WelcomeScreen = (props) => {
                                 <div className="grouped fields">
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="mode" />
+                                            <input type="radio" name="mode" id="name2code" />
                                             <label>Common name => Four-letter code</label>
                                         </div>
                                     </div>
                                     <div className="field">
                                         <div className="ui radio checkbox">
-                                            <input type="radio" name="mode" />
+                                            <input type="radio" name="mode" id="code2name" />
                                             <label>Four-letter code => Common name</label>
                                         </div>
                                     </div>        

@@ -4,8 +4,8 @@ import WelcomeScreen from './WelcomeScreen';
 class App extends React.Component {
 
     state = {
+        scope: "",
         mode: "nameToCode",
-        url: "http://localhost:3000/birds/appledore/random",
         bird: {},
         userResponse: "",
         questionList: [],
@@ -13,7 +13,9 @@ class App extends React.Component {
     }
 
     onGoClick = () => {
-        fetch(this.state.url)
+        let url;
+        this.state.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
+        fetch(url)
         .then(resp => resp.json())
         .then(bird => {
             if (this.state.questionList.find(question => question.id === bird.id)) {
@@ -112,10 +114,22 @@ class App extends React.Component {
 
     }
 
+    onScopeChange = (event) => {
+        console.log(event.target.id);
+        this.setState({
+            scope: event.target.id
+        })
+    }
+
     render() {
         return (
             <div className="ui container">
-                <WelcomeScreen onGoClick={this.onGoClick}/>
+                <WelcomeScreen 
+                    scope={this.state.scope} 
+                    mode={this.state.mode}
+                    onGoClick={this.onGoClick} 
+                    onScopeChange={this.onScopeChange}
+                />
                     {this.state.bird.common_name ? this.renderQuestion() : null }
                 <div className="ui container">
                     { this.state.questionList.length > 0 ? this.addResponses() : null }
