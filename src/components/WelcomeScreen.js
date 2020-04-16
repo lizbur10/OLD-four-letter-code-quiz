@@ -42,7 +42,7 @@ const WelcomeScreen = (props) => {
                                                     type="radio" 
                                                     name={question.questionName} 
                                                     id={option.optionVal}
-                                                    onChange={props.onScopeChange}
+                                                    onChange={props.onChange}
                                                     defaultChecked={props[question.questionName]===option.optionVal} 
                                                 />
                                                 <label>{option.optionLabel}</label>

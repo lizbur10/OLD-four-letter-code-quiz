@@ -100,7 +100,7 @@ class App extends React.Component {
         } else {
             congrat = "Keep practicing:"
         }
-        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}}, console.log(this.state));
+        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}}, () => console.log(this.state));
     }
 
     addResponses = () => {
@@ -129,9 +129,7 @@ class App extends React.Component {
 
     }
 
-    onScopeChange = (event) => this.setState({ scope: event.target.id })
-
-    onModeChange = (event) => this.setState({ mode: event.target.id })
+    onChange = (event) => this.setState({ [event.target.name]: event.target.id }, () => console.log(this.state))
 
     renderWelcomeScreen = () => {
         return (
@@ -139,8 +137,7 @@ class App extends React.Component {
                 scope={this.state.scope} 
                 mode={this.state.mode}
                 launchQuestion={this.launchQuestion} 
-                onScopeChange={this.onScopeChange}
-                onModeChange={this.onModeChange}
+                onChange={this.onChange}
             />
         )
     }
