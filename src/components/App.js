@@ -1,8 +1,8 @@
 import React from 'react';
-import { Modal } from 'semantic-ui-react'
 import WelcomeScreen from './WelcomeScreen';
 import QuizQuestion from './QuizQuestion';
 import ResponseTable from './ResponseTable';
+import ResultsTally from './ResultsTally';
 
 class App extends React.Component {
 
@@ -121,23 +121,29 @@ class App extends React.Component {
                 giveAnswer={this.giveAnswer}
             />
         )
+    }
 
+    onModalClose = () => {
+        this.setState({ gameOver: {} })
+    }
+
+    renderResults = () => {
+        return (
+            <ResultsTally
+                gameOver={this.state.gameOver}
+                numQuestions={this.state.numQuestions}
+                onModalClose={this.onModalClose}
+            />
+        )
     }
 
     render() {
         return (
             <div className="ui container">
-            { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
-            { this.state.bird.common_name ? this.renderQuestion() : null }
-            { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
-
-                <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
-                    <Modal.Header>Quiz Over!</Modal.Header>
-                    <Modal.Content>
-                        <h2>{this.state.gameOver.congrat} You got {this.state.gameOver.total} out of {this.state.numQuestions} correct!</h2>
-                    </Modal.Content>
-                </Modal>    
-
+                { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
+                { this.state.bird.common_name ? this.renderQuestion() : null }
+                { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
+                { this.state.gameOver.open ? this.renderResults() : null }
             </div>
         );
     }
