@@ -14,14 +14,14 @@ class App extends React.Component {
         gameOver: {}
     }
 
-    onGoClick = () => {
+    launchQuestion = () => {
         let url;
         this.state.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
         fetch(url)
         .then(resp => resp.json())
         .then(bird => {
             if (this.state.questionList.find(question => question.id === bird.id)) {
-                this.onGoClick();
+                this.launchQuestion();
             } else {
                 this.setState({bird: bird});
                 document.querySelector("#answer").focus();    
@@ -42,7 +42,7 @@ class App extends React.Component {
     }
 
     checkContinue = () => {
-        this.state.questionList.length < this.state.numQuestions ? this.onGoClick() : this.endGame();
+        this.state.questionList.length < this.state.numQuestions ? this.launchQuestion() : this.endGame();
     }
 
     renderQuestion = () => {
@@ -133,24 +133,31 @@ class App extends React.Component {
 
     onModeChange = (event) => this.setState({ mode: event.target.id })
 
+    renderWelcomeScreen = () => {
+        return (
+            <WelcomeScreen 
+            scope={this.state.scope} 
+            mode={this.state.mode}
+            launchQuestion={this.launchQuestion} 
+            onScopeChange={this.onScopeChange}
+            onModeChange={this.onModeChange}
+        />
+
+        )
+    }
+
     render() {
         return (
             <div className="ui container">
-                <WelcomeScreen 
-                    scope={this.state.scope} 
-                    mode={this.state.mode}
-                    onGoClick={this.onGoClick} 
-                    onScopeChange={this.onScopeChange}
-                    onModeChange={this.onModeChange}
-                />
-                            <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
-                <Modal.Header>Quiz Over!</Modal.Header>
-                <Modal.Content>
-                    <h2>{this.state.gameOver.congrat} You got {this.state.gameOver.total} out of {this.state.numQuestions} correct!</h2>
-                </Modal.Content>
-            </Modal>    
+            { !this.state.bird.common_name ? this.renderWelcomeScreen() : this.renderQuestion }
+                <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
+                    <Modal.Header>Quiz Over!</Modal.Header>
+                    <Modal.Content>
+                        <h2>{this.state.gameOver.congrat} You got {this.state.gameOver.total} out of {this.state.numQuestions} correct!</h2>
+                    </Modal.Content>
+                </Modal>    
 
-                    {this.state.bird.common_name ? this.renderQuestion() : null }
+                {this.state.bird.common_name ? this.renderQuestion() : null }
                 <Table celled striped>
                     <Table.Header>
                         <Table.Row>

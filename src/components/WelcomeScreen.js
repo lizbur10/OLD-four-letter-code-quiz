@@ -1,84 +1,83 @@
 import React from 'react';
 
 const WelcomeScreen = (props) => {
+    const questions = [
+        {
+            questionText: "What birds should be included?", 
+            questionId: "scope",
+            questionOptions: [{
+                optionVal: "appledore",
+                optionLabel: "Appledore birds"
+            },
+            {
+                optionVal: "aba",
+                optionLabel: "All birds on the ABA checklist"
+            }
+
+            ]
+        }, 
+        {
+            questionText: "What game mode would you like?", 
+            questionId: "mode",
+            questionOptions: [{
+                optionVal: "nameToCode",
+                optionLabel: "Common name => Four-letter code"
+            },
+            {
+                optionVal: "codeToName",
+                optionLabel: "Four-letter code => Common name"
+            }
+
+            ]
+        }, 
+    ]
+
+    const renderQuestions = () => {
+        return questions.map(question => {
+            return (
+                <React.Fragment>
+                    <div className="ui card">
+                    <div className="content">
+                        <div className="header">{question.questionText}</div>
+                    </div>
+                    <div className="content">
+                        <div className="ui form">
+                            <div className="grouped fields">
+                                {question.questionOptions.map(option => {
+                                    return (
+                                        <React.Fragment>
+                                            <div className="field">
+                                                <div className="ui radio checkbox">
+                                                    <input 
+                                                        type="radio" 
+                                                        name={question.questionId} 
+                                                        id={question.questionVal}
+                                                        onChange={props.onScopeChange}
+                                                        defaultChecked={props[question.questionId]===option.optionVal} 
+                                                    />
+                                                    <label>{option.optionLabel}</label>
+                                                </div>
+                                            </div>
+                                        </React.Fragment>    
+                                    )
+                                })}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </React.Fragment>
+            )
+        })
+    }
+
     return (
         <div>
             <div className="ui container">
                 <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
                 <div className="ui segment">
-                    <div className="ui card">
-                        <div className="content">
-                            <div className="header">What birds should be included?</div>
-                        </div>
-                        <div className="content">
-                            <div className="ui form">
-                                <div className="grouped fields">
-                                    <div className="field">
-                                        <div className="ui radio checkbox">
-                                            <input 
-                                                type="radio" 
-                                                name="scope" 
-                                                id="appledore"
-                                                onChange={props.onScopeChange}
-                                                defaultChecked={props.scope==="appledore"} 
-                                            />
-                                            <label>Appledore birds</label>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <div className="ui radio checkbox">
-                                            <input 
-                                                type="radio" 
-                                                name="scope" 
-                                                id="aba"
-                                                onChange={props.onScopeChange}
-                                                defaultChecked={props.scope==="aba"} 
-                                            />
-                                            <label>All birds on the ABA checklist</label>
-                                        </div>
-                                    </div>        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="ui card">
-                        <div className="content">
-                            <div className="header">What game mode would you like?</div>
-                        </div>
-                        <div className="content">
-                            <div className="ui form">
-                                <div className="grouped fields">
-                                    <div className="field">
-                                        <div className="ui radio checkbox">
-                                            <input 
-                                                type="radio" 
-                                                name="mode" 
-                                                id="nameToCode" 
-                                                onChange={props.onModeChange}
-                                                defaultChecked={props.mode==="nameToCode"} 
-                                            />
-                                            <label>Common name => Four-letter code</label>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <div className="ui radio checkbox">
-                                            <input 
-                                                type="radio" 
-                                                name="mode" 
-                                                id="codeToName" 
-                                                onChange={props.onModeChange}
-                                                defaultChecked={props.mode==="codeToName"} 
-                                            />
-                                            <label>Four-letter code => Common name</label>
-                                        </div>
-                                    </div>        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {renderQuestions()}
                 </div>
-                <h2>Ready to Play?</h2>
-                <button onClick={props.onGoClick}>GO</button>
+                <button onClick={props.launchQuestion}>START</button>
             </div>
         </div>
     )}
