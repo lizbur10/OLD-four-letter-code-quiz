@@ -100,7 +100,7 @@ class App extends React.Component {
         } else {
             congrat = "Keep practicing:"
         }
-        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}});
+        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}}, console.log(this.state));
     }
 
     addResponses = () => {
@@ -136,20 +136,19 @@ class App extends React.Component {
     renderWelcomeScreen = () => {
         return (
             <WelcomeScreen 
-            scope={this.state.scope} 
-            mode={this.state.mode}
-            launchQuestion={this.launchQuestion} 
-            onScopeChange={this.onScopeChange}
-            onModeChange={this.onModeChange}
-        />
-
+                scope={this.state.scope} 
+                mode={this.state.mode}
+                launchQuestion={this.launchQuestion} 
+                onScopeChange={this.onScopeChange}
+                onModeChange={this.onModeChange}
+            />
         )
     }
 
     render() {
         return (
             <div className="ui container">
-            { !this.state.bird.common_name ? this.renderWelcomeScreen() : this.renderQuestion }
+            { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
                 <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
                     <Modal.Header>Quiz Over!</Modal.Header>
                     <Modal.Content>
