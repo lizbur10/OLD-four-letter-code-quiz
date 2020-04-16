@@ -1,6 +1,6 @@
 import React from 'react';
 import WelcomeScreen from './WelcomeScreen';
-import { Icon, Table } from 'semantic-ui-react'
+import { Icon, Modal, Table } from 'semantic-ui-react'
 
 class App extends React.Component {
 
@@ -10,7 +10,8 @@ class App extends React.Component {
         bird: {},
         userResponse: "",
         questionList: [],
-        numQuestions: 10
+        numQuestions: 2,
+        gameOver: {}
     }
 
     onGoClick = () => {
@@ -89,9 +90,17 @@ class App extends React.Component {
             
             return currentVal.correct ? memo + 1 : memo
         },0)
-        this.setState({bird: "", questionList: []});
-
-        alert(`You got ${(total/this.state.questionList.length)*100}% correct`);
+        let congrat;
+        if (total > 8) {
+            congrat = "You rule!"
+        } else if (total > 6) {
+            congrat = "Nice going!"
+        } else if (total > 4) {
+            congrat = "You're making progress!"
+        } else {
+            congrat = "Keep practicing:"
+        }
+        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}});
     }
 
     addResponses = () => {
@@ -134,11 +143,18 @@ class App extends React.Component {
                     onScopeChange={this.onScopeChange}
                     onModeChange={this.onModeChange}
                 />
+                            <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
+                <Modal.Header>Quiz Over!</Modal.Header>
+                <Modal.Content>
+                    <h2>{this.state.gameOver.congrat} You got {this.state.gameOver.total} out of {this.state.numQuestions} correct!</h2>
+                </Modal.Content>
+            </Modal>    
+
                     {this.state.bird.common_name ? this.renderQuestion() : null }
                 <Table celled striped>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell colSpan='3'>Your responses</Table.HeaderCell>
+                            <Table.HeaderCell colSpan='3'>Results</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
