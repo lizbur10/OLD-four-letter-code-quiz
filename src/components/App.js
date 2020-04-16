@@ -1,6 +1,7 @@
 import React from 'react';
+import { Modal } from 'semantic-ui-react'
 import WelcomeScreen from './WelcomeScreen';
-import { Icon, Modal, Table } from 'semantic-ui-react'
+import ResponseTable from './ResponseTable';
 
 class App extends React.Component {
 
@@ -10,7 +11,7 @@ class App extends React.Component {
         bird: {},
         userResponse: "",
         questionList: [],
-        numQuestions: 2,
+        numQuestions: 5,
         gameOver: {}
     }
 
@@ -49,7 +50,7 @@ class App extends React.Component {
         const bird=this.state.bird;
         const prompt = this.state.mode === "codeToName" ? bird.four_letter_code : bird.common_name
         return (
-            <form onSubmit={(event) => this.onSubmit(bird, event)}>
+            <form onSubmit={(event) => this.onAnswerSubmit(bird, event)}>
                 <div className="ui horizontal segments">
                     <div className="ui segment">{prompt}</div>
                     <div className="ui segment">
@@ -62,7 +63,7 @@ class App extends React.Component {
 
     }
 
-    onSubmit = (bird, event) => {
+    onAnswerSubmit = (bird, event) => {
         event.preventDefault();
         const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
         var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
@@ -100,36 +101,19 @@ class App extends React.Component {
         } else {
             congrat = "Keep practicing:"
         }
-        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}}, () => console.log(this.state));
+        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}});
     }
 
-    addResponses = () => {
-        return this.state.questionList.map(bird => {
-            let prompt, answer;
-            const icon = bird.correct ? {name: "checkmark", color: 'green'} : {name: "x", color: 'red'}
-            if (this.state.mode === "codeToName") {
-                prompt = bird.four_letter_code;
-                answer = bird.common_name;            
-            } else {
-                prompt = bird.common_name;
-                answer = bird.four_letter_code;
-            }
-            return (
-                <Table.Row key={bird.id}>
-                <Table.Cell collapsing>
-                  {prompt}
-                </Table.Cell>
-                <Table.Cell collapsing>{answer}</Table.Cell>
-                <Table.Cell collapsing>
-                    <Icon name={icon.name} size='large' color={icon.color} />
-                </Table.Cell>
-              </Table.Row>
-            )
-        })
-
+    renderResponseTable = () => {
+        return (
+            <ResponseTable 
+                questionList={this.state.questionList}
+                mode={this.state.mode}
+            />
+        )
     }
 
-    onChange = (event) => this.setState({ [event.target.name]: event.target.id }, () => console.log(this.state))
+    onChange = (event) => this.setState({ [event.target.name]: event.target.id })
 
     renderWelcomeScreen = () => {
         return (
@@ -153,17 +137,8 @@ class App extends React.Component {
                     </Modal.Content>
                 </Modal>    
 
-                {this.state.bird.common_name ? this.renderQuestion() : null }
-                <Table celled striped>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell colSpan='3'>Results</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        { this.state.questionList.length > 0 ? this.addResponses() : null }
-                    </Table.Body>
-                </Table>
+                { this.state.bird.common_name ? this.renderQuestion() : null }
+                { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
             </div>
         );
     }
