@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from 'semantic-ui-react'
 import WelcomeScreen from './WelcomeScreen';
+import QuizQuestion from './QuizQuestion';
 import ResponseTable from './ResponseTable';
 
 class App extends React.Component {
@@ -44,23 +45,6 @@ class App extends React.Component {
 
     checkContinue = () => {
         this.state.questionList.length < this.state.numQuestions ? this.launchQuestion() : this.endGame();
-    }
-
-    renderQuestion = () => {
-        const bird=this.state.bird;
-        const prompt = this.state.mode === "codeToName" ? bird.four_letter_code : bird.common_name
-        return (
-            <form onSubmit={(event) => this.onAnswerSubmit(bird, event)}>
-                <div className="ui horizontal segments">
-                    <div className="ui segment">{prompt}</div>
-                    <div className="ui segment">
-                        <input type="text" id="answer" value={this.state.userResponse} onChange={this.onChangeHandler} />
-                    </div>
-                    <button type="button" onClick={event => this.giveAnswer(bird,event)}>Tell me</button>
-                </div>
-            </form>
-        )
-
     }
 
     onAnswerSubmit = (bird, event) => {
@@ -113,7 +97,7 @@ class App extends React.Component {
         )
     }
 
-    onChange = (event) => this.setState({ [event.target.name]: event.target.id })
+    onOptionChange = (event) => this.setState({ [event.target.name]: event.target.id })
 
     renderWelcomeScreen = () => {
         return (
@@ -121,15 +105,32 @@ class App extends React.Component {
                 scope={this.state.scope} 
                 mode={this.state.mode}
                 launchQuestion={this.launchQuestion} 
-                onChange={this.onChange}
+                onChange={this.onOptionChange}
             />
         )
+    }
+
+    renderQuestion = () => {
+        return (
+            <QuizQuestion 
+                bird={this.state.bird}
+                mode={this.state.mode}
+                userResponse={this.state.userResponse}
+                onAnswerSubmit={this.onAnswerSubmit}
+                onChangeHandler={this.onChangeHandler}
+                giveAnswer={this.giveAnswer}
+            />
+        )
+
     }
 
     render() {
         return (
             <div className="ui container">
             { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
+            { this.state.bird.common_name ? this.renderQuestion() : null }
+            { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
+
                 <Modal open={this.state.gameOver.open} onClose={() => this.setState({gameOver: {}})}>
                     <Modal.Header>Quiz Over!</Modal.Header>
                     <Modal.Content>
@@ -137,8 +138,6 @@ class App extends React.Component {
                     </Modal.Content>
                 </Modal>    
 
-                { this.state.bird.common_name ? this.renderQuestion() : null }
-                { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
             </div>
         );
     }
