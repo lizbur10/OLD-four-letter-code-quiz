@@ -16,6 +16,13 @@ class App extends React.Component {
         gameOver: {}
     }
 
+
+  componentDidUpdate(prevProps, prevState) {
+      if (document.querySelector("#answer")) {
+        document.querySelector("#answer").focus();
+      }
+  }
+
     launchQuestion = () => {
         let url;
         this.state.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
@@ -26,7 +33,6 @@ class App extends React.Component {
                 this.launchQuestion();
             } else {
                 this.setState({bird: bird});
-                document.querySelector("#answer").focus();    
             }
         })
     }
@@ -106,6 +112,7 @@ class App extends React.Component {
                 mode={this.state.mode}
                 launchQuestion={this.launchQuestion} 
                 onChange={this.onOptionChange}
+                open={true}
             />
         )
     }
@@ -119,6 +126,7 @@ class App extends React.Component {
                 onAnswerSubmit={this.onAnswerSubmit}
                 onChangeHandler={this.onChangeHandler}
                 giveAnswer={this.giveAnswer}
+                open={true}
             />
         )
     }

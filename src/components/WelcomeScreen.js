@@ -1,4 +1,6 @@
 import React from 'react';
+import { Modal } from 'semantic-ui-react';
+
 
 const WelcomeScreen = (props) => {
     const questions = [{
@@ -59,15 +61,17 @@ const WelcomeScreen = (props) => {
     }
 
     return (
-        <div>
-            <div className="ui container">
+        <Modal open={props.open}>
+            <Modal.Header className="ui container">
                 <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
+            </Modal.Header>
+            <Modal.Content>
                 <div className="ui segment">
                     {renderQuestions()}
                 </div>
                 <button onClick={props.launchQuestion}>START</button>
-            </div>
-        </div>
+            </Modal.Content>
+        </Modal>
     )}
 
 export default WelcomeScreen;
