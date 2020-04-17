@@ -12,7 +12,7 @@ class App extends React.Component {
         bird: {},
         userResponse: "",
         questionList: [],
-        numQuestions: 5,
+        numQuestions: 10,
         gameOver: {}
     }
 
@@ -85,7 +85,7 @@ class App extends React.Component {
         } else {
             congrat = "Keep practicing:"
         }
-        this.setState({bird: "", questionList: [], gameOver: {total: total, congrat: congrat, open: true}});
+        this.setState({bird: "", gameOver: {total: total, congrat: congrat, open: true}});
     }
 
     renderResponseTable = () => {
@@ -124,7 +124,7 @@ class App extends React.Component {
     }
 
     onModalClose = () => {
-        this.setState({ gameOver: {} })
+        this.setState({ gameOver: {}, questionList: []})
     }
 
     renderResults = () => {
@@ -133,6 +133,8 @@ class App extends React.Component {
                 gameOver={this.state.gameOver}
                 numQuestions={this.state.numQuestions}
                 onModalClose={this.onModalClose}
+                questionList={this.state.questionList}
+                mode={this.state.mode}
             />
         )
     }
@@ -142,7 +144,6 @@ class App extends React.Component {
             <div className="ui container">
                 { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
                 { this.state.bird.common_name ? this.renderQuestion() : null }
-                { this.state.questionList.length > 0 ? this.renderResponseTable() : null }
                 { this.state.gameOver.open ? this.renderResults() : null }
             </div>
         );

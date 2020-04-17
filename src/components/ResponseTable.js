@@ -3,6 +3,7 @@ import { Icon, Table } from 'semantic-ui-react'
 
 const ResponseTable = ({ questionList, mode }) => {
     const renderRows = () => {
+        console.log(questionList, mode)
         return questionList.map(bird => {
             let prompt, answer;
             const icon = bird.correct ? {name: "checkmark", color: 'green'} : {name: "x", color: 'red'}
@@ -27,11 +28,6 @@ const ResponseTable = ({ questionList, mode }) => {
 
     return (
         <Table celled striped>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell colSpan='3'>Results</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
             <Table.Body>
                 {renderRows()}
             </Table.Body>
