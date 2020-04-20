@@ -7,12 +7,14 @@ import ResultsTally from './ResultsTally';
 class App extends React.Component {
 
     state = {
-        scope: "appledore",
-        mode: "nameToCode",
+        settings: {
+            scope: "appledore",
+            mode: "nameToCode",
+            numQuestions: 5    
+        },
         bird: {},
         userResponse: "",
         questionList: [],
-        numQuestions: 10,
         gameOver: {}
     }
 
@@ -25,7 +27,7 @@ class App extends React.Component {
 
     launchQuestion = () => {
         let url;
-        this.state.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
+        this.state.settings.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
         fetch(url)
         .then(resp => resp.json())
         .then(bird => {
@@ -42,7 +44,7 @@ class App extends React.Component {
     }
 
     giveAnswer = (bird) => {
-        const answer = this.state.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
+        const answer = this.state.settings.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
         alert("The correct answer is " + answer);
         bird.correct = false;
         this.setState({questionList: [...this.state.questionList, bird]}, () => this.checkContinue());
@@ -50,7 +52,7 @@ class App extends React.Component {
     }
 
     checkContinue = () => {
-        this.state.questionList.length < this.state.numQuestions ? this.launchQuestion() : this.endGame();
+        this.state.questionList.length < this.state.settings.numQuestions ? this.launchQuestion() : this.endGame();
     }
 
     onAnswerSubmit = (bird, event) => {
@@ -68,8 +70,8 @@ class App extends React.Component {
     }
 
     checkCorrect = (bird) => {
-        const {userResponse, mode} = this.state;
-        const correctAnswer = mode === "nameToCode" ? bird.four_letter_code : bird.common_name
+        const {userResponse} = this.state;
+        const correctAnswer = this.state.settings.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
         return userResponse.toLowerCase() === correctAnswer.toLowerCase() ||
             userResponse.toLowerCase().replace("'", "") === correctAnswer.toLowerCase().replace("'", "") ||
             userResponse.toLowerCase().replace("-", " ") === correctAnswer.toLowerCase().replace("-", " ") ||
@@ -98,18 +100,19 @@ class App extends React.Component {
         return (
             <ResponseTable 
                 questionList={this.state.questionList}
-                mode={this.state.mode}
+                mode={this.state.settings.mode}
             />
         )
     }
 
-    onOptionChange = (event) => this.setState({ [event.target.name]: event.target.id })
+    onOptionChange = (event) => this.setState({ settings: {...this.state.settings, [event.target.name]: event.target.id }})
 
     renderWelcomeScreen = () => {
+        console.log(this.state)
         return (
             <WelcomeScreen 
-                scope={this.state.scope} 
-                mode={this.state.mode}
+                scope={this.state.settings.scope} 
+                mode={this.state.settings.mode}
                 launchQuestion={this.launchQuestion} 
                 onChange={this.onOptionChange}
                 open={true}
@@ -121,7 +124,7 @@ class App extends React.Component {
         return (
             <QuizQuestion 
                 bird={this.state.bird}
-                mode={this.state.mode}
+                mode={this.state.settings.mode}
                 userResponse={this.state.userResponse}
                 onAnswerSubmit={this.onAnswerSubmit}
                 onChangeHandler={this.onChangeHandler}
@@ -131,18 +134,18 @@ class App extends React.Component {
         )
     }
 
-    onModalClose = () => {
+    onResultsModalClose = () => {
         this.setState({ gameOver: {}, questionList: []})
     }
 
-    renderResults = () => {
+    renderQuizResults = () => {
         return (
             <ResultsTally
                 gameOver={this.state.gameOver}
-                numQuestions={this.state.numQuestions}
-                onModalClose={this.onModalClose}
+                numQuestions={this.state.settings.numQuestions}
+                onModalClose={this.onResultsModalClose}
                 questionList={this.state.questionList}
-                mode={this.state.mode}
+                mode={this.state.settings.mode}
             />
         )
     }
@@ -152,7 +155,7 @@ class App extends React.Component {
             <div className="ui container">
                 { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
                 { this.state.bird.common_name ? this.renderQuestion() : null }
-                { this.state.gameOver.open ? this.renderResults() : null }
+                { this.state.gameOver.open ? this.renderQuizResults() : null }
             </div>
         );
     }

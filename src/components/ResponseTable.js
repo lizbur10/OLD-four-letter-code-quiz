@@ -16,8 +16,8 @@ const ResponseTable = ({ questionList, mode }) => {
             }
             return (
                 <Table.Row key={bird.id}>
-                    <Table.Cell collapsing>{prompt}</Table.Cell>
-                    <Table.Cell collapsing>{answer}</Table.Cell>
+                    <Table.Cell collapsing><h3>{prompt}</h3></Table.Cell>
+                    <Table.Cell collapsing><h3>{answer}</h3></Table.Cell>
                     <Table.Cell collapsing>
                         <Icon name={icon.name} size='large' color={icon.color} />
                     </Table.Cell>
