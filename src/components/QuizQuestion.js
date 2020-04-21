@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react';
 const QuizQuestion = ({ bird, mode, userResponse, onAnswerSubmit, onChangeHandler, giveAnswer, open }) => {
     const prompt = mode === "codeToName" ? bird.four_letter_code : bird.common_name
     return (
-        <Modal open={open}>
+        <Modal open={open} centered>
             <Modal.Content>
                 <form onSubmit={(event) => onAnswerSubmit(bird, event)}>
                     <div className="ui horizontal segments">

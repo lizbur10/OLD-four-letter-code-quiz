@@ -3,15 +3,18 @@ import WelcomeScreen from './WelcomeScreen';
 import QuizQuestion from './QuizQuestion';
 import ResponseTable from './ResponseTable';
 import ResultsTally from './ResultsTally';
+import Congrats from './Congrats';
 
 class App extends React.Component {
 
     state = {
+        display: "welcome",
         settings: {
             scope: "appledore",
             mode: "nameToCode",
             numQuestions: 5    
         },
+        correct: null,
         bird: {},
         userResponse: "",
         questionList: [],
@@ -20,6 +23,7 @@ class App extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
+      console.log(this.state.display);
       if (document.querySelector("#answer")) {
         document.querySelector("#answer").focus();
       }
@@ -27,6 +31,7 @@ class App extends React.Component {
 
     launchQuestion = () => {
         let url;
+        this.setState({display: "question"})
         this.state.settings.scope==="appledore" ? url="http://localhost:3000/birds/appledore/random" : url="http://localhost:3000/birds/random"
         fetch(url)
         .then(resp => resp.json())
@@ -57,12 +62,12 @@ class App extends React.Component {
 
     onAnswerSubmit = (bird, event) => {
         event.preventDefault();
-        const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
-        var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
+        // const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
+        // var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
         if (this.checkCorrect(bird)) {
-            alert(wootWoot);
+            // alert(wootWoot);
             bird.correct = true
-            this.setState({userResponse: "", questionList: [...this.state.questionList, bird] }, () => this.checkContinue());
+            this.setState({correct: true, display: "congrats", bird: {}, userResponse: "", questionList: [...this.state.questionList, bird] });
         } else {
             alert("No soap - try again")
             this.setState({userResponse: ""});
@@ -93,7 +98,7 @@ class App extends React.Component {
         } else {
             congrat = "Keep practicing:"
         }
-        this.setState({bird: "", gameOver: {total: total, congrat: congrat, open: true}});
+        this.setState({bird: "", display: "over", gameOver: {total: total, congrat: congrat, open: true}});
     }
 
     renderResponseTable = () => {
@@ -108,7 +113,6 @@ class App extends React.Component {
     onOptionChange = (event) => this.setState({ settings: {...this.state.settings, [event.target.name]: event.target.id }})
 
     renderWelcomeScreen = () => {
-        console.log(this.state)
         return (
             <WelcomeScreen 
                 scope={this.state.settings.scope} 
@@ -135,7 +139,7 @@ class App extends React.Component {
     }
 
     onResultsModalClose = () => {
-        this.setState({ gameOver: {}, questionList: []})
+        this.setState({ display: "welcome", gameOver: {}, questionList: []})
     }
 
     renderQuizResults = () => {
@@ -150,12 +154,25 @@ class App extends React.Component {
         )
     }
 
+    onCongratsModalClose = () => {
+        console.log("fired")
+        this.setState({correct: null}, () => this.checkContinue())
+
+    }
+
+    renderCongrats = () => {
+        return (
+            <Congrats open={this.state.correct} onEnterPress={this.onCongratsModalClose} />
+        )
+    }
+
     render() {
         return (
             <div className="ui container">
-                { !this.state.bird.common_name ? this.renderWelcomeScreen() : null }
-                { this.state.bird.common_name ? this.renderQuestion() : null }
-                { this.state.gameOver.open ? this.renderQuizResults() : null }
+                { this.state.display === "welcome" ? this.renderWelcomeScreen() : null }
+                { this.state.display === "question" ? this.renderQuestion() : null }
+                { this.state.display === "congrats" ? this.renderCongrats() : null }
+                { this.state.display === "over" ? this.renderQuizResults() : null }
             </div>
         );
     }
