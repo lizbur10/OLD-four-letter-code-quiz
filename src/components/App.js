@@ -23,7 +23,6 @@ class App extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-      console.log(this.state.display);
       if (document.querySelector("#answer")) {
         document.querySelector("#answer").focus();
       }
@@ -62,15 +61,12 @@ class App extends React.Component {
 
     onAnswerSubmit = (bird, event) => {
         event.preventDefault();
-        // const daBomb = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!", "Awesome socks!", "Spifftacular", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
-        // var wootWoot = daBomb[Math.floor(Math.random()*daBomb.length)];
         if (this.checkCorrect(bird)) {
-            // alert(wootWoot);
             bird.correct = true
             this.setState({correct: true, display: "congrats", bird: {}, userResponse: "", questionList: [...this.state.questionList, bird] });
         } else {
-            alert("No soap - try again")
-            this.setState({userResponse: ""});
+            
+            this.setState({correct: false, display: "congrats", userResponse: ""});
         }
     }
 
@@ -155,14 +151,16 @@ class App extends React.Component {
     }
 
     onCongratsModalClose = () => {
-        console.log("fired")
-        this.setState({correct: null}, () => this.checkContinue())
-
+        if (this.state.correct) {
+            this.setState({correct: null}, () => this.checkContinue())
+        } else {
+            this.setState({correct: null, display: "question"})
+        }
     }
 
     renderCongrats = () => {
         return (
-            <Congrats open={this.state.correct} onEnterPress={this.onCongratsModalClose} />
+            <Congrats open={true} correct={this.state.correct} onEnterPress={this.onCongratsModalClose} />
         )
     }
 

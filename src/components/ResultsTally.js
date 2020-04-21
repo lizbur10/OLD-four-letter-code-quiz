@@ -11,6 +11,7 @@ const ResultsTally = ({ gameOver, numQuestions, onModalClose, questionList, mode
                     questionList={questionList}
                     mode={mode}
                 />
+            <button onClick={onModalClose} >DONE</button>
             </Modal.Content>
         </Modal>    
     )
