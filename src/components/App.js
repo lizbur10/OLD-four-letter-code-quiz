@@ -15,6 +15,7 @@ class App extends React.Component {
             numQuestions: 5    
         },
         correct: null,
+        answer: null,
         bird: {},
         userResponse: "",
         questionList: [],
@@ -49,9 +50,8 @@ class App extends React.Component {
 
     giveAnswer = (bird) => {
         const answer = this.state.settings.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
-        alert("The correct answer is " + answer);
         bird.correct = false;
-        this.setState({questionList: [...this.state.questionList, bird]}, () => this.checkContinue());
+        this.setState({display: "congrats", answer: answer, questionList: [...this.state.questionList, bird]});
 
     }
 
@@ -153,6 +153,8 @@ class App extends React.Component {
     onCongratsModalClose = () => {
         if (this.state.correct) {
             this.setState({correct: null}, () => this.checkContinue())
+        } else if (this.state.answer) {
+            this.setState({correct: null, answer: null}, () => this.checkContinue())
         } else {
             this.setState({correct: null, display: "question"})
         }
@@ -160,7 +162,7 @@ class App extends React.Component {
 
     renderCongrats = () => {
         return (
-            <Congrats open={true} correct={this.state.correct} onEnterPress={this.onCongratsModalClose} />
+            <Congrats open={true} correct={this.state.correct} answer={this.state.answer} onEnterPress={this.onCongratsModalClose} />
         )
     }
 
