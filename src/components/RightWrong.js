@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Icon } from 'semantic-ui-react';
 import KeyHandler, { KEYPRESS } from 'react-key-handler';
 
-const Congrats = ({open, correct, answer, onEnterPress}) => {
+const RightWrong = ({open, correct, answer, onEnterPress}) => {
     const gotIt = ["Boomshaka!", "Woot!!", "Cha-ching!", "Whooga!", "Awesomesauce!", "Cool beans!", "Bejujular!!", "Awesome socks!!", "Spifftacular!", "Grooveballs!", "The bomb.com!", "Shweet!", "Amazazing!", "Shmakalaking!","Bomb diggity!"]
     const icon = correct ? {name: "checkmark", color: 'green'} : {name: "x", color: 'red'}
     let wootWoot
@@ -27,4 +27,4 @@ return (
     )
 }
 
-export default Congrats;
+export default RightWrong;

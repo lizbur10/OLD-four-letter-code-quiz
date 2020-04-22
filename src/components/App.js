@@ -3,7 +3,7 @@ import WelcomeScreen from './WelcomeScreen';
 import QuizQuestion from './QuizQuestion';
 import ResponseTable from './ResponseTable';
 import ResultsTally from './ResultsTally';
-import Congrats from './Congrats';
+import RightWrong from './RightWrong';
 
 class App extends React.Component {
 
@@ -51,7 +51,7 @@ class App extends React.Component {
     giveAnswer = (bird) => {
         const answer = this.state.settings.mode === "nameToCode" ? bird.four_letter_code : bird.common_name
         bird.correct = false;
-        this.setState({display: "congrats", answer: answer, questionList: [...this.state.questionList, bird]});
+        this.setState({display: "rightWrong", answer: answer, questionList: [...this.state.questionList, bird]});
 
     }
 
@@ -63,10 +63,10 @@ class App extends React.Component {
         event.preventDefault();
         if (this.checkCorrect(bird)) {
             bird.correct = true
-            this.setState({correct: true, display: "congrats", bird: {}, userResponse: "", questionList: [...this.state.questionList, bird] });
+            this.setState({correct: true, display: "rightWrong", bird: {}, userResponse: "", questionList: [...this.state.questionList, bird] });
         } else {
             
-            this.setState({correct: false, display: "congrats", userResponse: ""});
+            this.setState({correct: false, display: "rightWrong", userResponse: ""});
         }
     }
 
@@ -150,7 +150,7 @@ class App extends React.Component {
         )
     }
 
-    onCongratsModalClose = () => {
+    onRightWrongModalClose = () => {
         if (this.state.correct) {
             this.setState({correct: null}, () => this.checkContinue())
         } else if (this.state.answer) {
@@ -160,9 +160,9 @@ class App extends React.Component {
         }
     }
 
-    renderCongrats = () => {
+    renderRightWrong = () => {
         return (
-            <Congrats open={true} correct={this.state.correct} answer={this.state.answer} onEnterPress={this.onCongratsModalClose} />
+            <RightWrong open={true} correct={this.state.correct} answer={this.state.answer} onEnterPress={this.onRightWrongModalClose} />
         )
     }
 
@@ -171,7 +171,7 @@ class App extends React.Component {
             <div className="ui container">
                 { this.state.display === "welcome" ? this.renderWelcomeScreen() : null }
                 { this.state.display === "question" ? this.renderQuestion() : null }
-                { this.state.display === "congrats" ? this.renderCongrats() : null }
+                { this.state.display === "rightWrong" ? this.renderRightWrong () : null }
                 { this.state.display === "over" ? this.renderQuizResults() : null }
             </div>
         );
