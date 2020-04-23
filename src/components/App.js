@@ -4,6 +4,7 @@ import QuizQuestion from './QuizQuestion';
 import ResponseTable from './ResponseTable';
 import ResultsTally from './ResultsTally';
 import RightWrong from './RightWrong';
+import Contact from './Contact';
 
 class App extends React.Component {
 
@@ -108,6 +109,11 @@ class App extends React.Component {
 
     onOptionChange = (event) => this.setState({ settings: {...this.state.settings, [event.target.name]: event.target.id }})
 
+    handleContactClick = (event) => {
+        event.preventDefault();
+        this.setState({ display: "contact"});
+    }
+
     renderWelcomeScreen = () => {
         return (
             <WelcomeScreen 
@@ -116,6 +122,7 @@ class App extends React.Component {
                 launchQuestion={this.launchQuestion} 
                 onChange={this.onOptionChange}
                 open={true}
+                handleContactClick={this.handleContactClick}
             />
         )
     }
@@ -166,13 +173,21 @@ class App extends React.Component {
         )
     }
 
+    renderContactForm = () => {
+        return (
+            <Contact open={true} />
+        )
+    }
+
     render() {
         return (
+            // Can a switch statement be used here?
             <div className="ui container">
                 { this.state.display === "welcome" ? this.renderWelcomeScreen() : null }
                 { this.state.display === "question" ? this.renderQuestion() : null }
                 { this.state.display === "rightWrong" ? this.renderRightWrong () : null }
                 { this.state.display === "over" ? this.renderQuizResults() : null }
+                { this.state.display === "contact" ? this.renderContactForm() : null}
             </div>
         );
     }

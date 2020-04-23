@@ -61,7 +61,7 @@ const WelcomeScreen = (props) => {
     }
 
     return (
-        <Modal open={props.open}>
+        <Modal open={props.open} size="small">
             <Modal.Header className="ui container">
                 <h1>Welcome to the Appledore Island Migration Station<br />Four-letter Code Quiz</h1>
             </Modal.Header>
@@ -70,7 +70,10 @@ const WelcomeScreen = (props) => {
                     {renderQuestions()}
                 </div>
                 <button onClick={props.launchQuestion}>START</button>
+                <p style={{marginTop: '20px'}}><a href="" onClick={props.handleContactClick}>Contact the developer</a> with bugs, errors, suggestions, or job offers.</p>
             </Modal.Content>
+
+
         </Modal>
     )}
 
